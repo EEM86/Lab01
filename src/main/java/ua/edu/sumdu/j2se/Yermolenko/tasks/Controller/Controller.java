@@ -74,7 +74,7 @@ public class Controller {
                                     if (tasksService.confirmation()) {
                                         tasksService.removeTaskModel(tasksService.getTaskModel(digit));
                                         consoleView.successTaskRemoving();
-                                        consoleView.printMainMenu(tasksService.getTaskList());
+                                        break;
                                     }
                                 } else if (BACK == Integer.parseInt(input)) {
                                     break;
