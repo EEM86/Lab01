@@ -5,22 +5,25 @@ import ua.edu.sumdu.j2se.Yermolenko.tasks.Controller.Controller;
 import ua.edu.sumdu.j2se.Yermolenko.tasks.Model.Task;
 import ua.edu.sumdu.j2se.Yermolenko.tasks.Model.TaskList;
 
+/**
+ * Class ConsoleView according to MVC pattern, realise View interface.
+ * Prints menus and action options for user.
+ */
 public class ConsoleView implements View {
     private final static Logger logger = Logger.getLogger(ConsoleView.class);
-    public static final String ANSI_RESET = "\u001B[0m";
-    public static final String ANSI_RED = "\u001B[31m";
-    public static final String ANSI_BLUE = "\u001B[34m";
-    public static final String ANSI_PURPLE = "\u001B[35m";
-    public static final String ANSI_CYAN = "\u001B[36m";
-    public static final String ANSI_YELLOW = "\u001B[33m";
-    public static final String ANSI_BLACK_BACKGROUND = "\u001B[40m";
 
+
+    /**
+     * Prints Main Menu View
+     * Prints all tasks and options for user to work with.
+     * @param taskList list of tasks
+     */
     @Override
     public void printMainMenu(TaskList taskList) {
         System.out.println("==============================================================");
         System.out.println("You have " + taskList);
         System.out.println("==============================================================");
-        System.out.println(ANSI_BLUE + "\nYou can choose such options:" + ANSI_RESET);
+        System.out.println("\nYou can choose such options:");
         System.out.println(Controller.ADDTASK + " - Add new Task");
         System.out.println(Controller.VIEWTASK + " - View specific Task");
         System.out.println(Controller.SELECTDATE + " - Select a date");
@@ -28,18 +31,28 @@ public class ConsoleView implements View {
         System.out.println("\n==============================================================\n");
     }
 
+    /**
+     * Prints info about starting adding a new task.
+     */
     @Override
     public void addTaskMenu() {
         System.out.println("*****************************************************************");
         System.out.println("Adding new task");
     }
 
+    /**
+     * Prints if a task was added to the list of tasks.
+     */
     @Override
     public void successTaskAdding() {
-        System.out.println(ANSI_PURPLE + "Task was successfully added" + ANSI_RESET);
+        System.out.println("Task was successfully added");
         System.out.println("*****************************************************************\n");
     }
 
+    /**
+     * Prints actual info about specific task and options to work with it.
+     * @param task the specific task from a list of tasks.
+     */
     @Override
     public void taskView(Task task) {
         System.out.println("Task title is: " + task.getTitle());
@@ -54,22 +67,33 @@ public class ConsoleView implements View {
                 Controller.BACK + " - back to previous menu");
     }
 
+    /**
+     * Prints available options to edit the task.
+     * @param task the specific task from a list of tasks.
+     */
     @Override
     public void editTaskView(Task task) {
         System.out.println(Controller.SETTITLE + " - Set title\n" + Controller.SETTIME + " - Set time\n" +
                 Controller.SETACTIVE + " - Set activity");
     }
 
+    /**
+     * Prints confirmation menu to prevent from deleting the task by mistake.
+     * @param task the specific task from a list of tasks.
+     */
     @Override
     public void removeTaskView(Task task) {
         System.out.println("--------------------------------------------------------------------");
-        System.out.println(ANSI_RED + "You are removing task:\n" + ANSI_RESET + ANSI_BLUE + task + ANSI_RESET);
+        System.out.println("You are removing task:\n"+ task);
         System.out.println("Are you sure?");
     }
 
+    /**
+     * Prints if a task was removed from the list of tasks.
+     */
     @Override
     public void successTaskRemoving() {
-        System.out.println(ANSI_PURPLE + "Task was successfully removed" + ANSI_RESET);
+        System.out.println("Task was successfully removed");
         System.out.println("--------------------------------------------------------------------\n");
     }
 

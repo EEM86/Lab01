@@ -173,10 +173,12 @@ public class TaskIO {
     public static void readText(TaskList tasks, File file) throws ParseException {
         try (FileReader fileReader = new FileReader(file)) {
             read(tasks, fileReader);
-        } catch (IOException e) {
-            System.out.println("Exception in reading from file " + e);
+        } catch (FileNotFoundException e) {
+            System.out.println("Can't find the file " + e);
         } catch (StringIndexOutOfBoundsException e) {
             System.out.println("The file is empty");
+        } catch (IOException e) {
+            System.out.println("Error in TaskIO readText()" + e);
         }
     }
 

@@ -2,7 +2,6 @@ package ua.edu.sumdu.j2se.Yermolenko.tasks.Model;
 
 import org.apache.log4j.Logger;
 import ua.edu.sumdu.j2se.Yermolenko.tasks.Controller.Controller;
-import ua.edu.sumdu.j2se.Yermolenko.tasks.View.ConsoleView;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -14,6 +13,10 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Class TasksService relates to Model according to MVC pattern.
+ * Describes the logic of the program.
+ */
 public class TasksService {
     private final static Logger logger = Logger.getLogger(TasksService.class);
     private TaskList taskList = loadTaskList();
@@ -21,13 +24,19 @@ public class TasksService {
     private SimpleDateFormat patternDate = new SimpleDateFormat("dd-MM-yyyy HH:mm");
     private boolean daemonWork = true;
 
+    /**
+     * Load list of tasks from a file.
+     * @return ArrayTaskList
+     * Catches ParseException if can't parse the file.
+     */
     public TaskList loadTaskList() {
         TaskList taskList = new ArrayTaskList();
-        File dir = new File("D://Text//JAVA//Netcracker//java.course.dev//ide//src//main//resources");
         try {
-            TaskIO.readText(taskList, new File(dir,"data.txt"));
-        } catch (ParseException e) {
-            logger.error("Problem with file 'data.txt', make sure this file is ok" + e);
+            TaskIO.readText(taskList, new File("data.txt"));
+            logger.debug("Opened file 'data.txt' from root directory");
+        }
+        catch (ParseException e) {
+            logger.error("Error. Can't parse the file " + e);
         }
         return taskList;
     }
@@ -36,6 +45,13 @@ public class TasksService {
         return taskList;
     }
 
+    /**
+     * Adds new task to a list of tasks.
+     * After adding a task to task list set the field daemonWork to false
+     * @see #notifyService
+     * @throws IOException if can't read the string from a console and
+     * @see #handleDateParseException
+     */
     public void addNewTask() throws IOException {
         String title = "";
         String input = "";
@@ -45,6 +61,7 @@ public class TasksService {
         int interval = 0;
         Task task = null;
 
+        logger.debug("Starting adding a new task");
         System.out.println("Enter a title of the task");
         title = reader.readLine();
         if (!title.isEmpty()) {
@@ -71,13 +88,31 @@ public class TasksService {
                 task.setActive(true);
             }
             taskList.add(task);
+            logger.debug("New task added to a task list");
             daemonWork = false;
+            logger.debug("daemonWork set to false");
         } else addNewTask();
     }
 
+    /**
+     * Returns task with index = digit - 1 from array list
+     * @param digit id of a task in a view.
+     * @return Task with digit id.
+     */
     public Task getTaskModel(int digit) {
         return taskList.getTask(digit - 1);
     }
+
+    /**
+     * Logic for task editing. Works with user's input.
+     * If user chooses
+     * 6 - he can set a new task title
+     * 7 - he can set a new task time
+     * 8 - he can set activity of the task
+     * If user entered another digit he would start again from this menu.
+     * @param task the specific task from a list of tasks.
+     * @throws IOException if can't read the string from a console
+     */
 
     public void editTaskModel(Task task) throws IOException {
 
@@ -89,6 +124,7 @@ public class TasksService {
         while (true) {
             int input = Integer.parseInt(reader.readLine());
             if (input == Controller.SETTITLE) {
+                logger.debug("Setting new task title");
                 System.out.println("Write new title: ");
                 String newTitle = reader.readLine();
                 if (!newTitle.isEmpty()) {
@@ -105,6 +141,7 @@ public class TasksService {
             else if (input == Controller.SETTIME) {
                 if (!task.isRepeated()) {
                     System.out.println("Enter time.");
+                    logger.debug("Setting new task time of a not repeatable task");
                     dateFormatForUser();
                     time = handleDateParseException();
                     if (confirmation()) {
@@ -113,9 +150,11 @@ public class TasksService {
                         logger.info("time was changed");
                         System.out.println("*****************\n");
                         daemonWork = false;
+                        logger.debug("daemonWork set to false after changing the time of unrepeated task");
                     }
                 } else {
                     System.out.println("Enter start time.");
+                    logger.debug("Setting new task time of a repeatable task");
                     dateFormatForUser();
                     start = handleDateParseException();
                     System.out.println("Enter end time.");
@@ -129,26 +168,33 @@ public class TasksService {
                         logger.info("time was changed");
                         System.out.println("*****************\n");
                         daemonWork = false;
+                        logger.debug("daemonWork set to false after changing the time of repeated task");
                     }
                 }
                 break;
             }
             else if (input == Controller.SETACTIVE) {
                 System.out.println("'Y' makes the task active. 'N' - inactive.");
+                logger.debug("Setting activity of a task");
                 if (confirmation()) {
                     task.setActive(true);
                 } else task.setActive(false);
             break;
             }
             else {
-                logger.warn(ConsoleView.ANSI_BLUE + "Please, type only " + Controller.SETTITLE + ", "
-                        + Controller.SETTIME + " or " + Controller.SETACTIVE + ConsoleView.ANSI_RESET);
+                logger.warn("Please, type only " + Controller.SETTITLE + ", "
+                        + Controller.SETTIME + " or " + Controller.SETACTIVE);
             }
         }
     }
 
+    /**
+     * Handles if user enters wrong option.
+     * @return true if user writes 'y' or 'Y' and false if user writes 'n' or 'N'
+     * @throws IOException if can't read the string from a console
+     */
     public boolean confirmation() throws IOException {
-        System.out.println(ConsoleView.ANSI_BLUE + "Please, confirm. (Y/N)" + ConsoleView.ANSI_RESET);
+        System.out.println("Please, confirm. (Y/N)");
         String confirm = reader.readLine();
         while (true) {
             if ("y".equalsIgnoreCase(confirm)) {
@@ -157,7 +203,7 @@ public class TasksService {
             if ("n".equalsIgnoreCase(confirm)) {
                 break;
             } else {
-                System.out.println(ConsoleView.ANSI_RED + "Please write only Y or N" + ConsoleView.ANSI_RESET);
+                System.out.println("Please write only Y or N");
                 confirm = reader.readLine();
             }
         }
@@ -169,29 +215,41 @@ public class TasksService {
         daemonWork = false;
     }
 
+    /**
+     * Saves task list to a file before exit the program.
+     */
     public void saveBeforeQuit() {
-        File dir = new File("D://Text//JAVA//Netcracker//java.course.dev//ide//src//main//resources");
-        TaskIO.writeText(taskList, new File(dir,"data.txt"));
+        TaskIO.writeText(taskList, new File("data.txt"));
     }
 
+    /**
+     * Prints message about correct date format to enter from a console.
+     */
     public void dateFormatForUser() {
         System.out.println("Please, use such format: day-month-year hours:minutes. For example: 01-11-2019 15:25");
     }
 
+    /**
+     * Prints calendar of tasks from start date to end date.
+     * @throws IOException if can't read the string from a console.
+     */
     public void showCalendar() throws IOException {
         System.out.println("Enter start date: ");
         Date start = handleDateParseException();
         System.out.println("Enter end date: ");
         Date end = handleDateParseException();
-        System.out.println(ConsoleView.ANSI_BLACK_BACKGROUND + ConsoleView.ANSI_YELLOW + "Date\t\t\t\t\t\t\t" +
-                "Tasks\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t" + ConsoleView.ANSI_RESET);
+        System.out.println("Date\t\t\t\t\t\t\t" +
+                "Tasks\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t");
         for (Map.Entry<Date, Set<Task>> pair: (Tasks.calendar(taskList, start, end)).entrySet()) {
-            Date gdfg = pair.getKey();
-            Set s1 = pair.getValue();
             System.out.println(pair.getKey() + "\t" + pair.getValue());
         }
     }
 
+    /**
+     * Handles exception when user types incorrect date format
+     * @return correct date according to date format.
+     * @throws IOException if can't read the string from a console
+     */
     public Date handleDateParseException() throws IOException {
         Date tmp = null;
         String input = reader.readLine();
@@ -207,6 +265,11 @@ public class TasksService {
         return tmp;
     }
 
+    /**
+     * Returns a task with nearest execute time from the current moment.
+     * @param tasks tasks list.
+     * @return a task with nearest execute time.
+     */
     public Task nearestTask(TaskList tasks) {
         Date current = new Date();
         Task result = null;
@@ -222,6 +285,18 @@ public class TasksService {
         return result;
     }
 
+    /**
+     * Create a daemon thread for notification when it is the time of a task.
+     *
+     * Gets a task with nearest time execute comparing to current time. Then compares task execute time and current time.
+     * As method ignores milliseconds, current time can be later than actual task execute time, so this method prints task time in console.
+     *
+     * If prints a notifying, sleeps for a 1 second for correct method working.
+     * Without sleep method prints a notify several times because this program works too quickly.
+     *
+     * If a task has just been added or changed, field daemonWork set to false.
+     * When the daemonWork is false, this method begins work with an updated task list.
+     */
     public void notifyService() {
         Thread notifyThread = new Thread(new Runnable() {
             @Override
@@ -235,9 +310,10 @@ public class TasksService {
                         Date tmp = task.nextTimeAfter(current);
                         while (daemonWork) {
                             if (tmp == null || tmp.compareTo(current) <= 0) {
-                                System.out.println("\n" + ConsoleView.ANSI_PURPLE + "Current time is " + current.toString() + ". It's task time: " + task.getTitle() + ConsoleView.ANSI_RESET);
+                                System.out.println("\n" + "Current time is " + current.toString() + ". It's task time: " + task.getTitle());
                                 try {
                                     Thread.sleep(1000);
+                                    logger.debug("Daemon thread sleeps for a second");
                                 } catch (InterruptedException e) {
                                     logger.error("Thread can't sleep" + e);
                                 }
@@ -251,6 +327,7 @@ public class TasksService {
         });
         notifyThread.setDaemon(true);
         notifyThread.start();
+        logger.debug("A daemon thread just has been started");
     }
 }
 

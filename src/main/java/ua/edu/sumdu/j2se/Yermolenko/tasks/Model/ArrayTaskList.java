@@ -161,8 +161,8 @@ public class ArrayTaskList extends TaskList {
             if (lastReturned < 0) {
                 throw new IllegalStateException();
             }
-            ArrayTaskList.this.remove(tasks[lastReturned]);  //        1   2     4        5   6   7   8   null
-            index = lastReturned;                            // LR=-1  0   1   LR=4  i    3    4   5   6   7
+            ArrayTaskList.this.remove(tasks[lastReturned]);
+            index = lastReturned;
             lastReturned = -1;
         }
     }

@@ -144,7 +144,7 @@ public class Task implements Cloneable, Serializable {
             else {
                 if (copyCurrent.compareTo(end) >= 0)
                     return null;
-                if (copyCurrent.compareTo(start) <= 0)
+                if (copyCurrent.compareTo(start) < 0)
                     return start;
                 else {
                     Date nextDate = new Date(start.getTime() + interval * 1000);

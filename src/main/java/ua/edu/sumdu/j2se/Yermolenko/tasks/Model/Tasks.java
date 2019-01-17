@@ -30,7 +30,6 @@ public class Tasks {
                 }
                 result = t.nextTimeAfter(result);
             }
-
         }
         return calend;
     }

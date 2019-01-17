@@ -8,6 +8,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+/**
+ * Class Controller according to MVC pattern.
+ * Combine Model logic and View data.
+ */
 public class Controller {
     private final static Logger logger = Logger.getLogger(Controller.class);
     private ConsoleView consoleView;
@@ -29,11 +33,15 @@ public class Controller {
         this.consoleView = consoleView;
     }
 
+    /**
+     * Main Menu of Task Manager.
+     */
     public void mainMenu() {
         consoleView.printMainMenu(tasksService.getTaskList());
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         tasksService.notifyService();
-        logger.debug("Daemon thread has been started");
+        logger.debug("Daemon thread for task notifying has been started");
+
 
         while (true) {
             try {
@@ -52,7 +60,7 @@ public class Controller {
                         int digit = 0;
                         digit = Integer.parseInt(reader.readLine());
                         while (digit > tasksService.getTaskList().size()) {
-                            System.out.println(ConsoleView.ANSI_RED + "Incorrect task ID. Try again." + ConsoleView.ANSI_RESET);
+                            System.out.println("Incorrect task ID. Try again.");
                             digit = Integer.parseInt(reader.readLine());
                         }
                             while (true) {
@@ -72,7 +80,7 @@ public class Controller {
                                     break;
                                 } else {
                                     System.out.println("==============================================================");
-                                    System.out.println(ConsoleView.ANSI_RED + "Please, type only " + EDITTASK + ", " + REMOVETASK + " or " + BACK + ConsoleView.ANSI_RESET);
+                                    System.out.println("Please, type only " + EDITTASK + ", " + REMOVETASK + " or " + BACK);
                                     System.out.println("==============================================================");
                                     Thread.sleep(500);
                                 }
@@ -106,7 +114,7 @@ public class Controller {
                 }
                 consoleView.printMainMenu(tasksService.getTaskList());
             } catch (NumberFormatException e) {
-                logger.error(ConsoleView.ANSI_RED + "Incorrect option. Try again." + ConsoleView.ANSI_RESET);
+                logger.error("Incorrect option. Try again.");
                 consoleView.printMainMenu(tasksService.getTaskList());
             } catch (IOException e) {
                 logger.error("IOException" + e);
