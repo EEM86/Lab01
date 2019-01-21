@@ -1,9 +1,12 @@
 package ua.edu.sumdu.j2se.Yermolenko.tasks.Model;
 
+import org.apache.log4j.Logger;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 public class LinkedTaskList extends TaskList implements Cloneable {
+    private final static Logger logger = Logger.getLogger(LinkedTaskList.class);
     private int size;
     private Node head;
     private Node tail;
@@ -17,7 +20,6 @@ public class LinkedTaskList extends TaskList implements Cloneable {
     public Node getTail() {
         return tail;
     }
-
 
     @Override
     public void add(Task task) {
@@ -44,8 +46,6 @@ public class LinkedTaskList extends TaskList implements Cloneable {
         else {
             for (Node i = head;  i != null; i = i.next) {
                 if (task.equals(i.task)) {
-//                   if (i.next == null && head == tail) {
-//                   }
                    if (i == tail && tail != head) {
                        tail = prev;
                        prev.next = null;
@@ -98,7 +98,6 @@ public class LinkedTaskList extends TaskList implements Cloneable {
                     && listCompare.getTask(i) == null))
                     || (this.getTask(i) != null
                     && (this.getTask(i).equals(listCompare.getTask(i))))) return true;
-
         }
         return false;
     }
@@ -111,7 +110,6 @@ public class LinkedTaskList extends TaskList implements Cloneable {
         }
         return result;
     }
-
 
     @Override
     public String toString() {

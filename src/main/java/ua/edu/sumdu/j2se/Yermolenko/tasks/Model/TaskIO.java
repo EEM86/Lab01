@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 public class TaskIO {
     private static SimpleDateFormat patternDate = new SimpleDateFormat("[yyyy-MM-dd HH:mm:ss.SSS]");
 
@@ -234,4 +233,3 @@ public class TaskIO {
         return hours + minutes + secs;
     }
 }
-

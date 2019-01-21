@@ -48,7 +48,7 @@ public class ArrayTaskList extends TaskList {
             for (int i = 0; i < tasks.length; i++) {
                 if (task.equals(tasks[i])) {
                     int taskMoved = initLength - i - 1;
-                    System.arraycopy(tasks, i + 1, tasks, i, taskMoved); // 2 3 5 7 8 9 10 11 null
+                    System.arraycopy(tasks, i + 1, tasks, i, taskMoved);
                     tasks[--initLength] = null;
                     size--;
                     return true;
@@ -75,9 +75,7 @@ public class ArrayTaskList extends TaskList {
         return tasks[index];
     }
 
-
-
-        @Override
+    @Override
     public boolean equals(Object obj) {
         if (obj == this) return true;
         if (obj == null || obj.getClass() != this.getClass()) return false;
@@ -98,7 +96,6 @@ public class ArrayTaskList extends TaskList {
         for (int i = 0; i < size; i++) {
             result = 31 * result + getTask(i).hashCode();
         }
-        //result = 31 * result + ((tasks == null) ? 0 : tasks.hashCode());
         return result;
     }
 
@@ -125,13 +122,6 @@ public class ArrayTaskList extends TaskList {
         }
         return clone;
     }
-
-//                "ArrayTaskList{" +
-//                "initLength=" + initLength +
-//                ", tasks=" + Arrays.toString(tasks) +
-//                ", size=" + size +
-//                '}';
-
 
     @Override
     public Iterator<Task> iterator() {

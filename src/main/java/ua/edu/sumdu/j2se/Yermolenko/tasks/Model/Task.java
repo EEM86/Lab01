@@ -86,12 +86,14 @@ public class Task implements Cloneable, Serializable {
     public Date getStartTime() {
         return (isRepeated() ? start : time);
     }
+
     /**
      * see getStartTime()
      */
     public Date getEndTime() {
         return (isRepeated() ? end : time);
     }
+
     /**
      * If the task is unrepeatable, method must return 0
      */
@@ -99,11 +101,9 @@ public class Task implements Cloneable, Serializable {
         return (isRepeated() ? interval : 0);
     }
 
-
     /**
      * If task is unrepeatable, it must be repeatable.
      */
-
     public void setTime(Date start, Date end, int interval) {
         if (start == null)
             throw new IllegalArgumentException("Start time must be positive!");
@@ -164,7 +164,6 @@ public class Task implements Cloneable, Serializable {
         }
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (o == this) return true;
@@ -181,10 +180,6 @@ public class Task implements Cloneable, Serializable {
                     && this.getTime() != null && this.getTime().equals(compare.getTime()))
                     && this.isActive() == compare.isActive();
         }
-
-
-        //return (title.equals(compare.title)) && (title != null && title.equals(compare.title));
-
     }
 
     @Override
@@ -209,7 +204,6 @@ public class Task implements Cloneable, Serializable {
             taskCloning.time = (Date) time.clone();
             taskCloning.start = (Date) start.clone();
             taskCloning.end = (Date) end.clone();
-
         return taskCloning;
     }
 }
