@@ -1,5 +1,7 @@
 package ua.edu.sumdu.j2se.Yermolenko.tasks.Model;
 
+import org.apache.log4j.Logger;
+
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -8,6 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TaskIO {
+    private final static Logger logger = Logger.getLogger(TaskIO.class);
     private static SimpleDateFormat patternDate = new SimpleDateFormat("[yyyy-MM-dd HH:mm:ss.SSS]");
 
     public static void write(TaskList tasks, OutputStream out) {
@@ -165,7 +168,7 @@ public class TaskIO {
                 tasks.add(task);
             }
         } catch (IOException e) {
-            System.out.println("Can't read in buffered reader " + e);
+            logger.error("Can't read in buffered reader " + e);
         }
     }
 
@@ -173,11 +176,11 @@ public class TaskIO {
         try (FileReader fileReader = new FileReader(file)) {
             read(tasks, fileReader);
         } catch (FileNotFoundException e) {
-            System.out.println("Can't find the file " + e);
+            logger.debug("Can't find the source file. It will be created automatically after exit the program");
         } catch (StringIndexOutOfBoundsException e) {
-            System.out.println("The file is empty");
+            logger.error("The file is empty");
         } catch (IOException e) {
-            System.out.println("Error in TaskIO readText()" + e);
+            logger.error("Error in TaskIO readText()" + e);
         }
     }
 
