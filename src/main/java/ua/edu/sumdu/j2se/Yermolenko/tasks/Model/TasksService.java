@@ -87,7 +87,7 @@ public class TasksService {
             if (confirmation()) {
                 task.setActive(true);
             }
-            taskList.add(task);
+            getTaskList().add(task);
             logger.debug("New task added to a task list");
             daemonWork = false;
             logger.debug("daemonWork set to false");
@@ -241,7 +241,7 @@ public class TasksService {
         System.out.println("Date\t\t\t\t\t\t\t" +
                 "Tasks\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t");
         for (Map.Entry<Date, Set<Task>> pair: (Tasks.calendar(taskList, start, end)).entrySet()) {
-            System.out.println(pair.getKey() + "\t" + pair.getValue());
+                System.out.println(pair.getKey() + "\t" + pair.getValue());
         }
     }
 
@@ -302,9 +302,14 @@ public class TasksService {
             @Override
             public void run() {
                 while (true) {
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        logger.error("Thread can't sleep" + e);
+                    }
                     daemonWork = true;
                     Date current = new Date();
-                    Task task = nearestTask(taskList);
+                    Task task = nearestTask(getTaskList());
 
                     if (task != null) {
                         Date tmp = task.nextTimeAfter(current);
