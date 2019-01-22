@@ -235,13 +235,17 @@ public class TasksService {
      */
     public void showCalendar() throws IOException {
         System.out.println("Enter start date: ");
+        dateFormatForUser();
         Date start = handleDateParseException();
         System.out.println("Enter end date: ");
+        dateFormatForUser();
         Date end = handleDateParseException();
         System.out.println("Date\t\t\t\t\t\t\t" +
                 "Tasks\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t");
         for (Map.Entry<Date, Set<Task>> pair: (Tasks.calendar(taskList, start, end)).entrySet()) {
-                System.out.println(pair.getKey() + "\t" + pair.getValue());
+            for (Task t: pair.getValue()) {
+                System.out.println(pair.getKey() + "\t" + t.getTitle());
+            }
         }
     }
 
